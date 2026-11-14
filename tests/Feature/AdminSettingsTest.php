@@ -22,7 +22,7 @@ class AdminSettingsTest extends TestCase
     {
         Setting::putMany(['email' => 'halo@devgenfour.com', 'instagram' => 'https://instagram.com/devgenfour']);
 
-        $response = $this->actingAs(User::factory()->create())->get('/admin/settings');
+        $response = $this->actingAs(User::factory()->admin()->create())->get('/admin/settings');
 
         $response->assertOk()
             ->assertSee('value="halo@devgenfour.com"', false)
@@ -33,7 +33,7 @@ class AdminSettingsTest extends TestCase
     {
         Setting::putMany(['linkedin' => 'https://linkedin.com/company/lama']);
 
-        $response = $this->actingAs(User::factory()->create())->put('/admin/settings', [
+        $response = $this->actingAs(User::factory()->admin()->create())->put('/admin/settings', [
             'email' => 'halo@devgenfour.com',
             'whatsapp' => '0812-3456-7890',
             'address' => 'Indramayu, Jawa Barat',
@@ -53,7 +53,7 @@ class AdminSettingsTest extends TestCase
 
     public function test_invalid_values_are_rejected_with_indonesian_messages(): void
     {
-        $response = $this->actingAs(User::factory()->create())->put('/admin/settings', [
+        $response = $this->actingAs(User::factory()->admin()->create())->put('/admin/settings', [
             'email' => 'bukan-email',
             'whatsapp' => 'nomor saya',
             'instagram' => 'javascript:alert(1)',
@@ -71,7 +71,7 @@ class AdminSettingsTest extends TestCase
 
     public function test_pasted_google_maps_iframe_code_keeps_only_its_link(): void
     {
-        $response = $this->actingAs(User::factory()->create())->put('/admin/settings', [
+        $response = $this->actingAs(User::factory()->admin()->create())->put('/admin/settings', [
             'maps_embed' => '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12&amp;hl=id" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>',
         ]);
 
@@ -81,7 +81,7 @@ class AdminSettingsTest extends TestCase
 
     public function test_maps_embed_from_another_site_is_rejected(): void
     {
-        $response = $this->actingAs(User::factory()->create())->put('/admin/settings', [
+        $response = $this->actingAs(User::factory()->admin()->create())->put('/admin/settings', [
             'maps_embed' => '<iframe src="https://situs-lain.example/peta"></iframe>',
         ]);
 

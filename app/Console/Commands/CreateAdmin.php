@@ -2,10 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
+use Spatie\Permission\Models\Role;
 
 use function Laravel\Prompts\password;
 use function Laravel\Prompts\text;
@@ -35,7 +37,7 @@ class CreateAdmin extends Command
             'name' => $name,
             'email' => $email,
             'password' => $password,
-        ]);
+        ])->assignRole(Role::findOrCreate(UserRole::Admin->value));
 
         $this->components->info("Akun admin {$email} berhasil dibuat.");
 

@@ -1,14 +1,20 @@
 <?php
 
+use App\Enums\UserRole;
+use App\Http\Controllers\Admin\InternCertificateController;
+use App\Http\Controllers\Admin\InternController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\ProjectIconPreviewController;
 use App\Http\Controllers\Admin\SessionController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\InternVerificationController;
 use App\Models\Project;
 use App\Support\ContactDetails;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
+use Spatie\Permission\Middleware\RoleMiddleware;
 
 Route::get('/', function (Request $request): View {
     $locale = $request->query('lang', $request->session()->get('locale', 'id'));
@@ -32,14 +38,21 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
         Route::post('login', [SessionController::class, 'store'])->middleware('throttle:admin-login')->name('login.store');
     });
 
-    Route::middleware('auth')->group(function (): void {
+    Route::middleware(['auth', RoleMiddleware::using(UserRole::Admin)])->group(function (): void {
         Route::redirect('/', '/admin/projects')->name('dashboard');
         Route::resource('projects', ProjectController::class)->except('show');
         Route::get('project-icon-preview', [ProjectIconPreviewController::class, 'show'])
             ->middleware('throttle:60,1')
             ->name('project-icon-preview.show');
+        Route::resource('interns', InternController::class)->except('show');
+        Route::get('interns/{intern}/certificate', InternCertificateController::class)->name('interns.certificate');
         Route::get('settings', [SettingController::class, 'edit'])->name('settings.edit');
         Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
-        Route::post('logout', [SessionController::class, 'destroy'])->name('logout');
     });
+
+    Route::post('logout', [SessionController::class, 'destroy'])->middleware('auth')->name('logout');
 });
+
+Route::get('verify/{intern}', InternVerificationController::class)
+    ->missing(fn (): Response => response()->view('interns.verify', ['intern' => null], 404))
+    ->name('interns.verify');

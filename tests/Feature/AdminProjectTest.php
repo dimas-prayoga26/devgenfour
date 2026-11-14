@@ -21,7 +21,7 @@ class AdminProjectTest extends TestCase
         Project::factory()->create(['name' => 'Proyek Tampil']);
         Project::factory()->hidden()->create(['name' => 'Proyek Draf']);
 
-        $response = $this->actingAs(User::factory()->create())->get('/admin/projects');
+        $response = $this->actingAs(User::factory()->admin()->create())->get('/admin/projects');
 
         $response->assertOk()
             ->assertSeeText('Proyek Tampil')
@@ -33,7 +33,7 @@ class AdminProjectTest extends TestCase
     {
         Storage::fake('public');
 
-        $response = $this->actingAs(User::factory()->create())->post('/admin/projects', $this->validPayload([
+        $response = $this->actingAs(User::factory()->admin()->create())->post('/admin/projects', $this->validPayload([
             'image' => UploadedFile::fake()->image('tampilan.jpg', 1200, 800),
         ]));
 
@@ -49,7 +49,7 @@ class AdminProjectTest extends TestCase
 
     public function test_empty_submission_lists_the_required_fields_in_indonesian(): void
     {
-        $response = $this->actingAs(User::factory()->create())->post('/admin/projects', []);
+        $response = $this->actingAs(User::factory()->admin()->create())->post('/admin/projects', []);
 
         $response->assertSessionHasErrors([
             'name' => 'Nama proyek wajib diisi.',
@@ -66,7 +66,7 @@ class AdminProjectTest extends TestCase
         Storage::fake('public');
         $svg = UploadedFile::fake()->createWithContent('logo.svg', '<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>');
 
-        $response = $this->actingAs(User::factory()->create())->post('/admin/projects', $this->validPayload(['image' => $svg]));
+        $response = $this->actingAs(User::factory()->admin()->create())->post('/admin/projects', $this->validPayload(['image' => $svg]));
 
         $response->assertSessionHasErrors(['image' => 'Gambar harus berformat JPG, PNG, atau WebP.']);
         $this->assertDatabaseCount('projects', 0);
@@ -75,7 +75,7 @@ class AdminProjectTest extends TestCase
 
     public function test_more_than_five_tags_are_rejected(): void
     {
-        $response = $this->actingAs(User::factory()->create())->post('/admin/projects', $this->validPayload([
+        $response = $this->actingAs(User::factory()->admin()->create())->post('/admin/projects', $this->validPayload([
             'tags' => 'Satu, Dua, Tiga, Empat, Lima, Enam',
             'image' => UploadedFile::fake()->image('tampilan.jpg'),
         ]));
@@ -90,7 +90,7 @@ class AdminProjectTest extends TestCase
         Storage::disk('public')->put('projects/lama.jpg', 'gambar lama');
         $project = Project::factory()->create(['image_path' => 'projects/lama.jpg']);
 
-        $response = $this->actingAs(User::factory()->create())->put("/admin/projects/{$project->id}", $this->validPayload([
+        $response = $this->actingAs(User::factory()->admin()->create())->put("/admin/projects/{$project->id}", $this->validPayload([
             'name' => 'Nama Baru',
             'image' => UploadedFile::fake()->image('baru.png', 1200, 800),
         ]));
@@ -109,7 +109,7 @@ class AdminProjectTest extends TestCase
         Storage::disk('public')->put('projects/tetap.jpg', 'gambar sekarang');
         $project = Project::factory()->create(['image_path' => 'projects/tetap.jpg']);
 
-        $response = $this->actingAs(User::factory()->create())->put("/admin/projects/{$project->id}", $this->validPayload([
+        $response = $this->actingAs(User::factory()->admin()->create())->put("/admin/projects/{$project->id}", $this->validPayload([
             'is_published' => '0',
         ]));
 
@@ -126,7 +126,7 @@ class AdminProjectTest extends TestCase
         Storage::disk('public')->put('projects/hapus.jpg', 'gambar');
         $project = Project::factory()->create(['image_path' => 'projects/hapus.jpg']);
 
-        $response = $this->actingAs(User::factory()->create())->delete("/admin/projects/{$project->id}");
+        $response = $this->actingAs(User::factory()->admin()->create())->delete("/admin/projects/{$project->id}");
 
         $response->assertRedirectToRoute('admin.projects.index');
         $this->assertModelMissing($project);
@@ -137,7 +137,7 @@ class AdminProjectTest extends TestCase
     {
         $project = Project::factory()->create();
 
-        $response = $this->actingAs(User::factory()->create())->get("/admin/projects/{$project->id}/edit");
+        $response = $this->actingAs(User::factory()->admin()->create())->get("/admin/projects/{$project->id}/edit");
 
         $response->assertOk()
             ->assertSee('<code data-icon-name class="text-navy">circle</code>', false)
@@ -148,7 +148,7 @@ class AdminProjectTest extends TestCase
     {
         Storage::fake('public');
 
-        $this->actingAs(User::factory()->create())->post('/admin/projects', $this->validPayload([
+        $this->actingAs(User::factory()->admin()->create())->post('/admin/projects', $this->validPayload([
             'category' => 'Jasa Laundry',
             'image' => UploadedFile::fake()->image('tampilan.jpg'),
         ]));
@@ -160,7 +160,7 @@ class AdminProjectTest extends TestCase
 
     public function test_project_form_only_asks_for_indonesian_copy(): void
     {
-        $response = $this->actingAs(User::factory()->create())->get('/admin/projects/create');
+        $response = $this->actingAs(User::factory()->admin()->create())->get('/admin/projects/create');
 
         $response->assertOk()
             ->assertSee('name="description"', false)
@@ -175,7 +175,7 @@ class AdminProjectTest extends TestCase
         Project::factory()->withTags(['Pembayaran' => null, 'Katalog Produk' => null])->create();
         Project::factory()->withTags(['pembayaran' => null, 'Reservasi' => null])->create();
 
-        $response = $this->actingAs(User::factory()->create())->get('/admin/projects/create');
+        $response = $this->actingAs(User::factory()->admin()->create())->get('/admin/projects/create');
 
         $response->assertOk()
             ->assertSee('data-suggestions="[&quot;Katalog Produk&quot;,&quot;Pembayaran&quot;,&quot;Reservasi&quot;]"', false);
@@ -185,7 +185,7 @@ class AdminProjectTest extends TestCase
     {
         Storage::fake('public');
 
-        $this->actingAs(User::factory()->create())->post('/admin/projects', $this->validPayload([
+        $this->actingAs(User::factory()->admin()->create())->post('/admin/projects', $this->validPayload([
             'tags' => ['Katalog Produk', '  Pembayaran ', 'katalog produk', ''],
             'image' => UploadedFile::fake()->image('tampilan.jpg'),
         ]));
@@ -196,7 +196,7 @@ class AdminProjectTest extends TestCase
     public function test_a_brand_new_tag_is_suggested_for_the_next_project(): void
     {
         Storage::fake('public');
-        $admin = User::factory()->create();
+        $admin = User::factory()->admin()->create();
 
         $this->actingAs($admin)->post('/admin/projects', $this->validPayload([
             'tags' => ['Pemesanan Tiket'],
@@ -212,7 +212,7 @@ class AdminProjectTest extends TestCase
         Storage::fake('public');
         Project::factory()->create(['sort_order' => 4]);
 
-        $this->actingAs(User::factory()->create())->post('/admin/projects', $this->validPayload([
+        $this->actingAs(User::factory()->admin()->create())->post('/admin/projects', $this->validPayload([
             'name' => 'Proyek Terbaru',
             'image' => UploadedFile::fake()->image('tampilan.jpg'),
         ]));
@@ -225,7 +225,7 @@ class AdminProjectTest extends TestCase
         Storage::fake('public');
         $project = Project::factory()->create(['sort_order' => 3]);
 
-        $this->actingAs(User::factory()->create())->put("/admin/projects/{$project->id}", $this->validPayload([
+        $this->actingAs(User::factory()->admin()->create())->put("/admin/projects/{$project->id}", $this->validPayload([
             'sort_order' => '99',
         ]));
 
@@ -242,7 +242,7 @@ class AdminProjectTest extends TestCase
             'Pembayaran' => 'Payment',
         ]);
 
-        $response = $this->actingAs(User::factory()->create())->post('/admin/projects', $this->validPayload([
+        $response = $this->actingAs(User::factory()->admin()->create())->post('/admin/projects', $this->validPayload([
             'image' => UploadedFile::fake()->image('tampilan.jpg'),
         ]));
 
@@ -262,7 +262,7 @@ class AdminProjectTest extends TestCase
             'description' => 'Contoh toko online dengan katalog produk dan pembayaran.',
         ]);
 
-        $response = $this->actingAs(User::factory()->create())->put("/admin/projects/{$project->id}", $this->validPayload([
+        $response = $this->actingAs(User::factory()->admin()->create())->put("/admin/projects/{$project->id}", $this->validPayload([
             'name' => 'Nama Baru',
         ]));
 
@@ -280,7 +280,7 @@ class AdminProjectTest extends TestCase
             'description' => 'Deskripsi lama.',
         ]);
 
-        $response = $this->actingAs(User::factory()->create())->put("/admin/projects/{$project->id}", $this->validPayload([
+        $response = $this->actingAs(User::factory()->admin()->create())->put("/admin/projects/{$project->id}", $this->validPayload([
             'description' => 'Deskripsi baru.',
         ]));
 
@@ -298,7 +298,7 @@ class AdminProjectTest extends TestCase
         Http::fake(['api-free.deepl.com/v2/translate' => Http::response(['message' => 'Quota exceeded'], 456)]);
         $project = Project::factory()->withEnglishCopy()->create(['description' => 'Deskripsi lama.']);
 
-        $response = $this->actingAs(User::factory()->create())->put("/admin/projects/{$project->id}", $this->validPayload([
+        $response = $this->actingAs(User::factory()->admin()->create())->put("/admin/projects/{$project->id}", $this->validPayload([
             'description' => 'Deskripsi baru.',
         ]));
 
@@ -316,7 +316,7 @@ class AdminProjectTest extends TestCase
         Storage::fake('public');
         config(['services.deepl.key' => null]);
 
-        $response = $this->actingAs(User::factory()->create())->post('/admin/projects', $this->validPayload([
+        $response = $this->actingAs(User::factory()->admin()->create())->post('/admin/projects', $this->validPayload([
             'image' => UploadedFile::fake()->image('tampilan.jpg'),
         ]));
 

@@ -115,3 +115,39 @@ if (carousel) {
     new ResizeObserver(() => goToSlide(current, true)).observe(track);
     updateSlide();
 }
+
+// iOS Safari only applies :active (tap feedback) once the page listens for touches.
+document.addEventListener('touchstart', () => {}, { passive: true });
+
+function updateHeaderShadow() {
+    header.toggleAttribute('data-scrolled', window.scrollY > 8);
+}
+
+window.addEventListener('scroll', updateHeaderShadow, { passive: true });
+updateHeaderShadow();
+
+// Content below the fold fades in as it scrolls into view; anything already on screen stays put.
+if (!reducedMotion.matches) {
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.dataset.reveal = 'shown';
+            revealObserver.unobserve(entry.target);
+        });
+    }, { rootMargin: '0px 0px -8% 0px' });
+
+    document.querySelectorAll('[data-reveal]').forEach((element) => {
+        if (element.getBoundingClientRect().top < window.innerHeight) return;
+        element.dataset.reveal = 'hidden';
+        revealObserver.observe(element);
+    });
+}
+
+// Touch screens cannot hover, so cards light up (the lit: variant) while they pass the middle of the screen.
+if (window.matchMedia('(hover: none)').matches) {
+    const spotlightObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => entry.target.toggleAttribute('data-lit', entry.isIntersecting));
+    }, { rootMargin: '-38% 0px -38% 0px' });
+
+    document.querySelectorAll('[data-spotlight]').forEach((element) => spotlightObserver.observe(element));
+}

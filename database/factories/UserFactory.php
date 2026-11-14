@@ -2,10 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 /**
  * @extends Factory<User>
@@ -31,6 +33,14 @@ class UserFactory extends Factory
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
         ];
+    }
+
+    /**
+     * Indicate that the user may use the admin panel.
+     */
+    public function admin(): static
+    {
+        return $this->afterCreating(fn (User $user): User => $user->assignRole(Role::findOrCreate(UserRole::Admin->value)));
     }
 
     /**

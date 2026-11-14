@@ -19,7 +19,7 @@ class ProjectIconPreviewTest extends TestCase
             ['detected_source_language' => 'ID', 'text' => 'Flower Shop'],
         ]])]);
 
-        $response = $this->actingAs(User::factory()->create())->getJson('/admin/project-icon-preview?category=Toko%20Bunga');
+        $response = $this->actingAs(User::factory()->admin()->create())->getJson('/admin/project-icon-preview?category=Toko%20Bunga');
 
         $response->assertOk()->assertJsonPath('icon', 'flower');
         $this->assertStringStartsWith('<', $response->json('svg'));
@@ -32,7 +32,7 @@ class ProjectIconPreviewTest extends TestCase
         Http::fake(['api-free.deepl.com/v2/translate' => Http::response(['translations' => [
             ['detected_source_language' => 'ID', 'text' => 'Flower Shop'],
         ]])]);
-        $admin = User::factory()->create();
+        $admin = User::factory()->admin()->create();
 
         $this->actingAs($admin)->getJson('/admin/project-icon-preview?category=Toko%20Bunga');
         $response = $this->actingAs($admin)->getJson('/admin/project-icon-preview?category=toko%20bunga');
@@ -46,7 +46,7 @@ class ProjectIconPreviewTest extends TestCase
         config(['services.deepl.key' => 'kunci-uji:fx']);
         Http::fake(['api-free.deepl.com/*' => Http::response(['translations' => []])]);
 
-        $response = $this->actingAs(User::factory()->create())->getJson('/admin/project-icon-preview?category=Bengkel%20Motor');
+        $response = $this->actingAs(User::factory()->admin()->create())->getJson('/admin/project-icon-preview?category=Bengkel%20Motor');
 
         $response->assertOk()->assertJsonPath('icon', 'wrench');
         Http::assertNothingSent();
@@ -57,7 +57,7 @@ class ProjectIconPreviewTest extends TestCase
         config(['services.deepl.key' => null]);
         Http::fake(['api-free.deepl.com/*' => Http::response(['translations' => []])]);
 
-        $response = $this->actingAs(User::factory()->create())->getJson('/admin/project-icon-preview?category=Jasa%20Laundry');
+        $response = $this->actingAs(User::factory()->admin()->create())->getJson('/admin/project-icon-preview?category=Jasa%20Laundry');
 
         $response->assertOk()->assertJsonPath('icon', 'washing-machine');
         Http::assertNothingSent();
@@ -68,21 +68,21 @@ class ProjectIconPreviewTest extends TestCase
         config(['services.deepl.key' => 'kunci-uji:fx']);
         Http::fake(['api-free.deepl.com/v2/translate' => Http::response(['message' => 'Quota exceeded'], 456)]);
 
-        $response = $this->actingAs(User::factory()->create())->getJson('/admin/project-icon-preview?category=Jasa%20Laundry');
+        $response = $this->actingAs(User::factory()->admin()->create())->getJson('/admin/project-icon-preview?category=Jasa%20Laundry');
 
         $response->assertOk()->assertJsonPath('icon', 'washing-machine');
     }
 
     public function test_empty_category_has_no_icon(): void
     {
-        $response = $this->actingAs(User::factory()->create())->getJson('/admin/project-icon-preview?category=%20');
+        $response = $this->actingAs(User::factory()->admin()->create())->getJson('/admin/project-icon-preview?category=%20');
 
         $response->assertOk()->assertExactJson(['icon' => null, 'svg' => null]);
     }
 
     public function test_overly_long_category_is_rejected(): void
     {
-        $response = $this->actingAs(User::factory()->create())->getJson('/admin/project-icon-preview?category='.str_repeat('a', 61));
+        $response = $this->actingAs(User::factory()->admin()->create())->getJson('/admin/project-icon-preview?category='.str_repeat('a', 61));
 
         $response->assertUnprocessable()->assertJsonValidationErrors('category');
     }

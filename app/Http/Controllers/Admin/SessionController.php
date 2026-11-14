@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,7 +21,7 @@ class SessionController extends Controller
     }
 
     /**
-     * Log the admin in.
+     * Log the admin in; accounts without the admin role are refused like a wrong password.
      */
     public function store(Request $request): RedirectResponse
     {
@@ -38,7 +40,9 @@ class SessionController extends Controller
             ],
         );
 
-        if (! Auth::attempt($credentials, $request->boolean('remember'))) {
+        $isAdmin = fn (User $user): bool => $user->hasRole(UserRole::Admin);
+
+        if (! Auth::attemptWhen($credentials, $isAdmin, $request->boolean('remember'))) {
             return back()
                 ->withErrors(['email' => 'Email atau password salah.'])
                 ->onlyInput('email');

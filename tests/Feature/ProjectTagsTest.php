@@ -23,7 +23,7 @@ class ProjectTagsTest extends TestCase
         $this->fakeDeepL(['Kelola Pesanan' => 'Order Management']);
         Tag::factory()->create(['name' => 'Katalog Produk', 'name_en' => 'Product Catalog']);
 
-        $this->actingAs(User::factory()->create())->post('/admin/projects', $this->payload(['katalog produk', 'Kelola Pesanan']));
+        $this->actingAs(User::factory()->admin()->create())->post('/admin/projects', $this->payload(['katalog produk', 'Kelola Pesanan']));
 
         $project = Project::query()->sole();
         $this->assertSame(['Katalog Produk', 'Kelola Pesanan'], $project->tags->pluck('name')->all());
@@ -38,7 +38,7 @@ class ProjectTagsTest extends TestCase
         Storage::fake('public');
         $this->fakeDeepL([]);
 
-        $this->actingAs(User::factory()->create())->post('/admin/projects', $this->payload(['Reservasi', 'Antarmuka', 'Laporan']));
+        $this->actingAs(User::factory()->admin()->create())->post('/admin/projects', $this->payload(['Reservasi', 'Antarmuka', 'Laporan']));
 
         $this->assertSame(['Reservasi', 'Antarmuka', 'Laporan'], Project::query()->sole()->tags->pluck('name')->all());
     }
@@ -50,7 +50,7 @@ class ProjectTagsTest extends TestCase
         $project = Project::factory()->withTags(['Katalog Produk' => 'Product Catalog', 'Pembayaran' => 'Payment'])->create();
         $removedTag = Tag::query()->where('name', 'Pembayaran')->sole();
 
-        $this->actingAs(User::factory()->create())->put("/admin/projects/{$project->id}", $this->payload(['Katalog Produk']));
+        $this->actingAs(User::factory()->admin()->create())->put("/admin/projects/{$project->id}", $this->payload(['Katalog Produk']));
 
         $this->assertSame(['Katalog Produk'], $project->refresh()->tags->pluck('name')->all());
         $this->assertModelExists($removedTag);
@@ -62,7 +62,7 @@ class ProjectTagsTest extends TestCase
         Storage::fake('public');
         $project = Project::factory()->withTags(['Reservasi' => 'Bookings'])->create();
 
-        $this->actingAs(User::factory()->create())->delete("/admin/projects/{$project->id}");
+        $this->actingAs(User::factory()->admin()->create())->delete("/admin/projects/{$project->id}");
 
         $this->assertDatabaseCount('project_tag', 0);
         $this->assertSame(['Reservasi'], Tag::suggestions());

@@ -5,12 +5,12 @@
 @endphp
 <section class="bg-white py-12 md:pt-16.5 md:pb-14.5" aria-labelledby="partners-title">
     <div class="mx-auto max-w-[1320px] px-4 xs:px-5 md:px-8 xl:px-12">
-        <div class="text-center">
+        <div data-reveal class="text-center data-[reveal=hidden]:opacity-0 data-[reveal=shown]:animate-reveal">
             <h2 id="partners-title" class="mt-3.25 text-[25px] leading-[1.35] font-bold tracking-[-1.1px] whitespace-pre-line md:mt-3.75 md:text-[29px] md:tracking-[-1.35px]">{{ __('company.partners_title') }}</h2>
             <p class="mt-3.25 text-[12px] text-muted">{{ __('company.partners_description') }}</p>
         </div>
-        <div class="group mt-8.5 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_7%,black_93%,transparent)] motion-reduce:overflow-x-auto motion-reduce:[mask-image:none]">
-            <div class="flex w-max animate-marquee group-focus-within:[animation-play-state:paused] group-hover:[animation-play-state:paused]">
+        <div data-reveal class="group mt-8.5 overflow-hidden data-[reveal=hidden]:opacity-0 data-[reveal=shown]:animate-reveal [--reveal-delay:120ms] [mask-image:linear-gradient(to_right,transparent,black_7%,black_93%,transparent)] motion-reduce:overflow-x-auto motion-reduce:[mask-image:none]">
+            <div class="flex w-max animate-marquee group-focus-within:[animation-play-state:paused] group-hover:[animation-play-state:paused] group-active:[animation-play-state:paused]">
                 @for($copy = 0; $copy < 2; $copy++)
                     <ul class="flex shrink-0 gap-4 pr-4 md:gap-6 md:pr-6 @if($copy === 1) motion-reduce:hidden @endif" @if($copy === 1) aria-hidden="true" @endif>
                         @for($round = 0; $round < $rounds; $round++)

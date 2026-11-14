@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use Database\Seeders\AdminSeeder;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
@@ -24,6 +25,7 @@ class AdminSeederTest extends TestCase
         $admin = User::query()->where('email', 'admin@devgenfour.test')->sole();
         $this->assertSame('Admin Devgenfour', $admin->name);
         $this->assertTrue(Hash::check('rahasia-123', $admin->password));
+        $this->assertTrue($admin->hasRole(UserRole::Admin));
     }
 
     public function test_falls_back_to_password_when_none_is_configured(): void

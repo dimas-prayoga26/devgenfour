@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class AdminSeeder extends Seeder
 {
@@ -30,7 +32,7 @@ class AdminSeeder extends Seeder
             'name' => config('company.admin.name'),
             'email' => $email,
             'password' => $password,
-        ]);
+        ])->assignRole(Role::findOrCreate(UserRole::Admin->value));
 
         $this->command?->info("Akun admin dibuat: {$email}");
 

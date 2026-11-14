@@ -18,7 +18,7 @@
                         <span class="hidden rounded-full bg-[#eaf6fc] px-2.5 py-0.5 text-[10px] font-extrabold tracking-[1px] text-brand md:inline">ADMIN</span>
                     </div>
                     <nav class="flex items-center gap-1" aria-label="Menu admin">
-                        @foreach (['admin.projects.index' => ['Portofolio', 'admin.projects.*'], 'admin.settings.edit' => ['Pengaturan', 'admin.settings.*']] as $route => [$label, $pattern])
+                        @foreach (['admin.projects.index' => ['Portofolio', 'admin.projects.*'], 'admin.interns.index' => ['Magang', 'admin.interns.*'], 'admin.settings.edit' => ['Pengaturan', 'admin.settings.*']] as $route => [$label, $pattern])
                             <a href="{{ route($route) }}" @if (request()->routeIs($pattern)) aria-current="page" @endif class="rounded-md px-3 py-2 text-[13px] font-semibold text-muted transition-colors hover:text-navy aria-[current=page]:bg-[#eaf6fc] aria-[current=page]:text-brand">{{ $label }}</a>
                         @endforeach
                     </nav>
