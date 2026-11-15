@@ -14,9 +14,9 @@
     <section class="{{ $cardClass }}">
         <h2 class="text-[15px] font-bold">Data peserta</h2>
         @if ($intern->exists)
-            <p class="{{ $hintClass }}">Nomor magang <span class="font-mono font-semibold text-navy">{{ $intern->number }}</span> sudah tercetak di sertifikat, jadi tidak berubah walaupun tanggal mulai diganti.</p>
+            <p class="{{ $hintClass }}">No. Sertifikat <span class="font-mono font-semibold text-navy">{{ $intern->number }}</span> sudah tercetak di sertifikat, jadi tidak berubah walaupun tanggal mulai diganti.</p>
         @else
-            <p class="{{ $hintClass }}">Nomor magang dibuat otomatis dari urutan dan tahun tanggal mulai, misalnya <span class="font-mono font-semibold text-navy">0001{{ now()->year }}</span> untuk peserta pertama tahun {{ now()->year }}.</p>
+            <p class="{{ $hintClass }}">No. Sertifikat dibuat otomatis dari urutan dan tahun tanggal mulai, misalnya <span class="font-mono font-semibold text-navy">0001{{ now()->year }}</span> untuk peserta pertama tahun {{ now()->year }}.</p>
         @endif
         <div class="mt-4 space-y-4">
             <div>

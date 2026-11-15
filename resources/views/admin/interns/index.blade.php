@@ -28,10 +28,10 @@
                     <tr>
                         <th scope="col" class="px-4 py-3 font-semibold">Foto Profile</th>
                         <th scope="col" class="px-4 py-3 font-semibold">Nama</th>
-                        <th scope="col" class="px-4 py-3 font-semibold">Nomor Magang</th>
+                        <th scope="col" class="px-4 py-3 font-semibold">No. Sertifikat</th>
                         <th scope="col" class="px-4 py-3 font-semibold">Tanggal Mulai</th>
                         <th scope="col" class="px-4 py-3 font-semibold">Tanggal Selesai</th>
-                        <th scope="col" class="px-4 py-3 font-semibold">Sertifikat</th>
+                        <th scope="col" class="px-4 py-3 font-semibold">File Sertifikat</th>
                         <th scope="col" class="px-4 py-3 text-right font-semibold">Aksi</th>
                     </tr>
                 </thead>

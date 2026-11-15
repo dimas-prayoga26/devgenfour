@@ -28,7 +28,7 @@ class InternVerificationTest extends TestCase
         $response->assertOk()
             ->assertSeeText('Terverifikasi')
             ->assertSeeText('Sertifikat ini asli dan terdaftar resmi di Devgenfour.')
-            ->assertSeeTextInOrder(['Rina Kartika', 'Nomor Magang', '00012026', 'Tanggal Mulai', '1 Juli 2026', 'Tanggal Selesai', '30 September 2026', 'Durasi', '3 bulan'])
+            ->assertSeeTextInOrder(['Rina Kartika', 'No. Sertifikat', '00012026', 'Tanggal Mulai', '1 Juli 2026', 'Tanggal Selesai', '30 September 2026', 'Durasi', '3 bulan'])
             ->assertSee(asset('storage/interns/rina.jpg'), false)
             ->assertSee('<meta name="robots" content="noindex, nofollow">', false);
     }

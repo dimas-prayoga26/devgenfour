@@ -39,7 +39,7 @@
                             <p class="text-[12px] font-semibold text-brand">Peserta Magang</p>
                             <h2 class="mt-0.5 text-[20px] leading-tight font-bold tracking-[-0.4px] break-words md:text-[22px]">{{ $intern->name }}</h2>
                             <p class="mt-3 inline-flex flex-wrap items-center gap-x-2 rounded-lg bg-[#eaf6fc] px-3 py-1.5">
-                                <span class="text-[11px] font-semibold text-muted">Nomor Magang</span>
+                                <span class="text-[11px] font-semibold text-muted">No. Sertifikat</span>
                                 <span class="font-mono text-[14px] font-bold tracking-[1px] text-brand">{{ $intern->number }}</span>
                             </p>
                         </div>

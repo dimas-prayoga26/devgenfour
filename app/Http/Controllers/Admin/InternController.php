@@ -55,7 +55,7 @@ class InternController extends Controller
         });
 
         return to_route('admin.interns.index')
-            ->with('status', "Magang \"{$intern->name}\" berhasil ditambahkan dengan nomor {$intern->number}.");
+            ->with('status', "Magang \"{$intern->name}\" berhasil ditambahkan dengan No. Sertifikat {$intern->number}.");
     }
 
     /**

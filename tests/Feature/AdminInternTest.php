@@ -22,7 +22,7 @@ class AdminInternTest extends TestCase
         $response = $this->actingAs(User::factory()->admin()->create())->get('/admin/interns');
 
         $response->assertOk()
-            ->assertSeeTextInOrder(['Foto Profile', 'Nama', 'Nomor Magang', 'Tanggal Mulai', 'Tanggal Selesai', 'Sertifikat', 'Aksi'])
+            ->assertSeeTextInOrder(['Foto Profile', 'Nama', 'No. Sertifikat', 'Tanggal Mulai', 'Tanggal Selesai', 'File Sertifikat', 'Aksi'])
             ->assertSeeText('Rina Kartika')
             ->assertSeeText('00012026')
             ->assertSeeText('1 Juli 2026')
@@ -39,7 +39,7 @@ class AdminInternTest extends TestCase
 
         $intern = Intern::query()->sole();
         $response->assertRedirectToRoute('admin.interns.index')
-            ->assertSessionHas('status', 'Magang "Rina Kartika" berhasil ditambahkan dengan nomor 00012026.');
+            ->assertSessionHas('status', 'Magang "Rina Kartika" berhasil ditambahkan dengan No. Sertifikat 00012026.');
         $this->assertSame('00012026', $intern->number);
         $this->assertSame('2026-07-01', $intern->start_date->toDateString());
         $this->assertSame('2026-09-30', $intern->end_date->toDateString());
