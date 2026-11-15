@@ -56,9 +56,7 @@
                                 <p class="text-[11px] text-muted">Tanggal Selesai</p>
                                 <p class="font-bold">{{ Intern::formatDate($intern->end_date) }}</p>
                             </div>
-                        </div>
-                        <p class="mt-3 border-t border-dashed border-line pt-3 text-[12px] text-muted">Durasi <span class="font-semibold text-navy">{{ $intern->durationLabel() }}</span></p>
-                    </div>
+                        </div>                    </div>
 
                     @if ($intern->hasCertificate())
                         <a href="{{ route('interns.certificate.download', $intern) }}" class="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-brand px-5 py-3 font-bold text-white transition hover:bg-[#096b96]">
