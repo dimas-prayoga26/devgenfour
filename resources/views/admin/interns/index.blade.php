@@ -11,7 +11,7 @@
     <div class="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
             <h1 class="text-[26px] font-bold tracking-[-0.8px]">Magang</h1>
-            <p class="mt-1 text-[13px] text-muted">Kelola peserta magang. Unduh QR untuk ditempel di sertifikat, lalu unggah sertifikatnya agar bisa diunduh dari halaman verifikasi.</p>
+            <p class="mt-1 text-[13px] text-muted">Kelola peserta magang dan unggah sertifikatnya agar bisa diunduh dari halaman verifikasi.</p>
         </div>
         <a href="{{ route('admin.interns.create') }}" class="inline-flex items-center gap-2 rounded-md bg-brand px-4 py-2.5 text-[13px] font-bold text-white transition hover:bg-[#096b96]">+ Tambah magang</a>
     </div>
@@ -38,7 +38,7 @@
                 <tbody class="divide-y divide-line">
                     @foreach ($interns as $intern)
                         <tr class="align-middle">
-                            <td class="px-4 py-3"><img class="h-12 w-9 rounded-md border border-line object-cover" src="{{ $intern->photoUrl() }}" alt="Foto {{ $intern->name }}" loading="lazy"></td>
+                            <td class="px-4 py-3"><img class="h-12 w-9 rounded-md border border-line object-cover" src="{{ $intern->photoUrl() }}" width="36" height="48" alt="Foto {{ $intern->name }}" loading="lazy"></td>
                             <td class="px-4 py-3 font-semibold">{{ $intern->name }}</td>
                             <td class="px-4 py-3"><span class="rounded-full bg-[#eaf6fc] px-2 py-0.5 font-mono text-[12px] font-semibold tracking-[0.5px] text-brand">{{ $intern->number }}</span></td>
                             <td class="px-4 py-3 whitespace-nowrap">{{ Intern::formatDate($intern->start_date) }}</td>
@@ -52,7 +52,6 @@
                             </td>
                             <td class="px-4 py-3">
                                 <div class="flex items-center justify-end gap-1.5">
-                                    <a href="{{ route('admin.interns.qr-code', $intern) }}" class="{{ $actionClass }}">Unduh QR</a>
                                     <a href="{{ route('interns.verify', $intern) }}" target="_blank" rel="noopener" class="{{ $actionClass }}">Detail ↗</a>
                                     <a href="{{ route('admin.interns.edit', $intern) }}" class="{{ $actionClass }}">Ubah</a>
                                     <form method="POST" action="{{ route('admin.interns.destroy', $intern) }}" onsubmit="return confirm('Hapus peserta magang ini? Kode QR di sertifikatnya tidak akan bisa diverifikasi lagi.')">

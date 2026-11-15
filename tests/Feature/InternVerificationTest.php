@@ -27,10 +27,21 @@ class InternVerificationTest extends TestCase
 
         $response->assertOk()
             ->assertSeeText('Terverifikasi')
-            ->assertSeeText('Verifikasi Sertifikat Magang')
-            ->assertSeeTextInOrder(['Nomor Magang', '00012026', 'Nama', 'Rina Kartika', 'Tanggal Mulai', '1 Juli 2026', 'Tanggal Selesai', '30 September 2026'])
+            ->assertSeeText('Sertifikat ini asli dan terdaftar resmi di Devgenfour.')
+            ->assertSeeTextInOrder(['Rina Kartika', 'Nomor Magang', '00012026', 'Tanggal Mulai', '1 Juli 2026', 'Tanggal Selesai', '30 September 2026', 'Durasi', '3 bulan'])
             ->assertSee(asset('storage/interns/rina.jpg'), false)
             ->assertSee('<meta name="robots" content="noindex, nofollow">', false);
+    }
+
+    public function test_duration_counts_both_the_first_and_the_last_day(): void
+    {
+        $shortIntern = Intern::factory()->create(['start_date' => '2026-11-15', 'end_date' => '2026-11-18']);
+        $sameDayIntern = Intern::factory()->create(['start_date' => '2026-11-15', 'end_date' => '2026-11-15']);
+        $mixedIntern = Intern::factory()->create(['start_date' => '2026-07-01', 'end_date' => '2026-08-10']);
+
+        $this->assertSame('4 hari', $shortIntern->durationLabel());
+        $this->assertSame('1 hari', $sameDayIntern->durationLabel());
+        $this->assertSame('1 bulan 10 hari', $mixedIntern->durationLabel());
     }
 
     public function test_download_button_appears_only_once_a_certificate_is_uploaded(): void
@@ -72,7 +83,7 @@ class InternVerificationTest extends TestCase
         $response->assertNotFound()
             ->assertSeeText('Sertifikat tidak ditemukan')
             ->assertSeeText('Tidak terverifikasi')
-            ->assertDontSeeText('Verifikasi Sertifikat Magang');
+            ->assertDontSeeText('Sertifikat ini asli');
     }
 
     public function test_malformed_code_shows_the_same_not_found_message(): void

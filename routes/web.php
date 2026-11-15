@@ -2,7 +2,6 @@
 
 use App\Enums\UserRole;
 use App\Http\Controllers\Admin\InternController;
-use App\Http\Controllers\Admin\InternQrCodeController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\ProjectIconPreviewController;
 use App\Http\Controllers\Admin\SessionController;
@@ -46,7 +45,6 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
             ->middleware('throttle:60,1')
             ->name('project-icon-preview.show');
         Route::resource('interns', InternController::class)->except('show');
-        Route::get('interns/{intern}/qr-code', InternQrCodeController::class)->name('interns.qr-code');
         Route::get('settings', [SettingController::class, 'edit'])->name('settings.edit');
         Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
     });

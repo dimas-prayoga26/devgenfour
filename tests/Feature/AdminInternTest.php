@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Intern;
 use App\Models\User;
-use App\Support\QrCode;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
@@ -191,18 +190,6 @@ class AdminInternTest extends TestCase
         Storage::disk('public')->assertMissing(['interns/hapus.jpg', 'interns/sertifikat.pdf']);
     }
 
-    public function test_qr_code_downloads_as_an_svg_of_the_verification_link(): void
-    {
-        $intern = Intern::factory()->create(['year' => 2026, 'sequence' => 1]);
-
-        $response = $this->actingAs(User::factory()->admin()->create())->get("/admin/interns/{$intern->id}/qr-code");
-
-        $response->assertOk()
-            ->assertHeader('Content-Type', 'image/svg+xml')
-            ->assertDownload('QR-00012026.svg');
-        $this->assertSame(QrCode::svg(url("/verify/{$intern->id}")), $response->getContent());
-    }
-
     public function test_guest_cannot_add_an_intern(): void
     {
         Storage::fake('public');
@@ -214,15 +201,23 @@ class AdminInternTest extends TestCase
         Storage::disk('public')->assertEmpty();
     }
 
-    public function test_account_without_the_admin_role_cannot_add_an_intern_or_download_a_qr_code(): void
+    public function test_account_without_the_admin_role_cannot_add_an_intern(): void
     {
         Storage::fake('public');
-        $user = User::factory()->create();
+
+        $response = $this->actingAs(User::factory()->create())->post('/admin/interns', $this->validPayload());
+
+        $response->assertForbidden();
+        $this->assertDatabaseCount('interns', 0);
+    }
+
+    public function test_edit_form_shows_the_verification_link_to_put_on_the_certificate(): void
+    {
         $intern = Intern::factory()->create();
 
-        $this->actingAs($user)->post('/admin/interns', $this->validPayload())->assertForbidden();
-        $this->actingAs($user)->get("/admin/interns/{$intern->id}/qr-code")->assertForbidden();
-        $this->assertDatabaseCount('interns', 1);
+        $response = $this->actingAs(User::factory()->admin()->create())->get("/admin/interns/{$intern->id}/edit");
+
+        $response->assertOk()->assertSeeText(url("/verify/{$intern->id}"));
     }
 
     /**

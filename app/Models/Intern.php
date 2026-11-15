@@ -105,6 +105,19 @@ class Intern extends Model
     }
 
     /**
+     * Get how long the internship lasts, counting both the first and the last day, e.g. "3 bulan" or "4 hari".
+     */
+    public function durationLabel(): string
+    {
+        $interval = $this->start_date->diff($this->end_date->copy()->addDay());
+
+        return collect(['bulan' => $interval->y * 12 + $interval->m, 'hari' => $interval->d])
+            ->filter()
+            ->map(fn (int $count, string $unit): string => "{$count} {$unit}")
+            ->implode(' ');
+    }
+
+    /**
      * Format a date in Indonesian, e.g. 1 Juli 2026.
      */
     public static function formatDate(CarbonInterface $date): string

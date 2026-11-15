@@ -44,7 +44,7 @@
         <div class="mt-4">
             <label for="photo" class="{{ $labelClass }}">Foto Profile</label>
             @if ($intern->exists)
-                <img class="mt-2 h-32 w-24 rounded-lg border border-line object-cover" src="{{ $intern->photoUrl() }}" alt="Foto saat ini">
+                <img class="mt-2 h-32 w-24 rounded-lg border border-line object-cover" src="{{ $intern->photoUrl() }}" width="96" height="128" alt="Foto saat ini">
             @endif
             <input id="photo" type="file" name="photo" accept="image/jpeg,image/png,image/webp" @required(! $intern->exists) class="{{ $fileClass }}">
             <p class="{{ $hintClass }}">JPG, PNG, atau WebP, maksimal 2 MB. Foto tegak seperti pas foto (rasio 3:4, misalnya 600 × 800 px) tampil paling pas.@if ($intern->exists) Kosongkan jika tidak ingin mengganti foto.@endif</p>
@@ -56,9 +56,9 @@
         <h2 class="text-[15px] font-bold">Sertifikat</h2>
         <p class="{{ $hintClass }}">
             @if ($intern->exists)
-                <a href="{{ route('admin.interns.qr-code', $intern) }}" class="font-semibold text-brand hover:underline">Unduh QR code</a> lalu tempel di desain sertifikat, kemudian unggah sertifikatnya di sini.
+                Link verifikasi peserta ini: <a href="{{ $intern->verificationUrl() }}" target="_blank" rel="noopener" class="font-semibold break-all text-brand hover:underline">{{ $intern->verificationUrl() }}</a>
             @else
-                Boleh dikosongkan dulu. Setelah peserta disimpan, unduh QR code-nya dari daftar magang, tempel di desain sertifikat, lalu unggah sertifikatnya lewat tombol Ubah.
+                Boleh dikosongkan dulu, lalu diunggah nanti lewat tombol Ubah.
             @endif
         </p>
         <div class="mt-4">
