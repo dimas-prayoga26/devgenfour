@@ -11,13 +11,15 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 /**
  * An intern whose certificate links to a public verification page by the intern's UUID.
  *
  * The intern number is the sequence within the start year followed by that year, e.g. 00012026. It is
  * assigned once when the intern is added and never changes, because it is printed on the certificate;
- * that is why `year` and `sequence` are left out of the fillable attributes.
+ * that is why `year` and `sequence` are left out of the fillable attributes. The admin designs the certificate
+ * elsewhere with the intern's QR code on it and uploads it afterwards, so `certificate_path` is optional.
  */
 #[Fillable(['name', 'start_date', 'end_date'])]
 class Intern extends Model
@@ -84,6 +86,22 @@ class Intern extends Model
     public function verificationUrl(): string
     {
         return route('interns.verify', $this);
+    }
+
+    /**
+     * Determine whether the admin has uploaded the intern's certificate.
+     */
+    public function hasCertificate(): bool
+    {
+        return $this->certificate_path !== null;
+    }
+
+    /**
+     * Get the name the certificate is downloaded as, e.g. Sertifikat-00012026-rina-kartika.pdf.
+     */
+    public function certificateDownloadName(): string
+    {
+        return sprintf('Sertifikat-%s-%s.%s', $this->number, Str::slug($this->name), pathinfo($this->certificate_path, PATHINFO_EXTENSION));
     }
 
     /**

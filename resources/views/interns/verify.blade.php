@@ -6,52 +6,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#0a2844">
-    <title>{{ $intern ? "Verifikasi sertifikat {$intern->number}" : 'Sertifikat tidak ditemukan' }} · Devgenfour</title>
+    <title>{{ $intern ? "Verifikasi Sertifikat {$intern->number}" : 'Sertifikat tidak ditemukan' }} · Devgenfour</title>
     <link rel="icon" type="image/png" href="{{ asset('Logo/logo_icon.png') }}">
     @vite('resources/css/app.css')
 </head>
-<body class="min-h-screen bg-[#f6f9fb] font-sans text-[14px] leading-[1.6] text-navy antialiased">
-    <main class="mx-auto flex min-h-screen max-w-md flex-col px-4 py-8 md:py-14">
-        <a href="{{ route('home') }}" class="mx-auto block w-[140px]"><img class="w-full" src="{{ asset('Logo/devgen.png') }}" width="500" height="240" alt="Devgenfour"></a>
+<body class="min-h-screen bg-[#f8fafc] font-sans text-[14px] leading-[1.6] text-navy antialiased">
+    <main class="mx-auto max-w-[640px] px-4 py-10 md:py-14">
+        <a href="{{ route('home') }}" class="mx-auto block w-[150px]"><img class="w-full" src="{{ asset('Logo/devgen.png') }}" width="500" height="240" alt="Devgenfour"></a>
 
-        @if ($intern)
-            <section class="mt-8 overflow-hidden rounded-2xl border border-line bg-white shadow-[0_12px_40px_#0c304512]">
-                <p class="flex items-center justify-center gap-2 bg-[#e9f8f3] px-4 py-3 text-[13px] font-bold text-[#1c6e52]">
-                    <svg class="size-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
-                    Sertifikat terverifikasi
-                </p>
-                <div class="flex flex-col items-center px-6 pt-7 text-center">
-                    <img class="size-32 rounded-full border-4 border-white object-cover shadow-[0_8px_24px_#0c30451f] ring-1 ring-line" src="{{ $intern->photoUrl() }}" width="128" height="128" alt="Foto {{ $intern->name }}">
-                    <h1 class="mt-4 text-[22px] leading-tight font-bold tracking-[-0.5px]">{{ $intern->name }}</h1>
-                    <p class="mt-1 text-[13px] text-muted">Peserta magang Devgenfour</p>
+        <section class="mt-8 rounded-2xl border border-line bg-white px-6 py-9 shadow-[0_12px_40px_#0c304510] md:px-10">
+            @if ($intern)
+                <div class="text-center">
+                    <span class="inline-flex items-center gap-1.5 rounded-full border border-[#bfe5d6] bg-[#e9f8f3] px-3.5 py-1 text-[12px] font-semibold text-[#1c6e52]">
+                        <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+                        Terverifikasi
+                    </span>
+                    <h1 class="mt-4 text-[24px] leading-tight font-bold tracking-[-0.5px]">Verifikasi Sertifikat Magang</h1>
+                    <p class="mt-2 text-muted">Dokumen ini telah terdaftar dan terverifikasi secara resmi oleh</p>
+                    <p class="font-semibold">Devgenfour</p>
                 </div>
-                <dl class="m-6 divide-y divide-line rounded-xl border border-line text-[13px]">
-                    <div class="flex items-center justify-between gap-4 px-4 py-3">
-                        <dt class="text-muted">Nomor magang</dt>
-                        <dd class="font-mono font-semibold tracking-[0.5px]">{{ $intern->number }}</dd>
-                    </div>
-                    <div class="flex items-center justify-between gap-4 px-4 py-3">
-                        <dt class="text-muted">Tanggal mulai</dt>
-                        <dd class="font-semibold">{{ Intern::formatDate($intern->start_date) }}</dd>
-                    </div>
-                    <div class="flex items-center justify-between gap-4 px-4 py-3">
-                        <dt class="text-muted">Tanggal selesai</dt>
-                        <dd class="font-semibold">{{ Intern::formatDate($intern->end_date) }}</dd>
-                    </div>
-                </dl>
-            </section>
-            <p class="mt-5 text-center text-[12px] text-muted">Data ini diterbitkan oleh Devgenfour dan sesuai dengan sertifikat yang dipindai.</p>
-        @else
-            <section class="mt-8 rounded-2xl border border-line bg-white p-8 text-center shadow-[0_12px_40px_#0c304512]">
-                <span class="mx-auto grid size-14 place-items-center rounded-full bg-[#fef3f2] text-[#b42318]">
-                    <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
-                </span>
-                <h1 class="mt-4 text-[20px] font-bold tracking-[-0.5px]">Sertifikat tidak ditemukan</h1>
-                <p class="mt-2 text-[13px] text-muted">Kode QR ini tidak terdaftar di Devgenfour. Pastikan Anda memindai sertifikat asli, atau hubungi kami untuk memastikannya.</p>
-            </section>
-        @endif
 
-        <p class="mt-auto pt-8 text-center"><a href="{{ route('home') }}" class="text-[13px] font-semibold text-muted transition-colors hover:text-brand">← Kunjungi website Devgenfour</a></p>
+                <p class="mt-8 flex items-center gap-4 text-[11px] font-bold tracking-[2px] whitespace-nowrap text-[#a7b4c0] uppercase"><span class="h-px flex-1 bg-line"></span>Data Magang<span class="h-px flex-1 bg-line"></span></p>
+
+                <img class="mx-auto mt-8 h-[120px] w-[90px] rounded-lg border border-line object-cover shadow-[0_6px_18px_#0c304514]" src="{{ $intern->photoUrl() }}" width="90" height="120" alt="Foto {{ $intern->name }}">
+
+                <dl class="mt-6 grid gap-x-6 xs:grid-cols-2 md:gap-x-8">
+                    @foreach (['Nomor Magang' => $intern->number, 'Nama' => $intern->name, 'Tanggal Mulai' => Intern::formatDate($intern->start_date), 'Tanggal Selesai' => Intern::formatDate($intern->end_date)] as $label => $value)
+                        <div class="border-b border-line py-4">
+                            <dt class="text-[11px] font-bold tracking-[0.8px] text-[#8193a3] uppercase">{{ $label }}</dt>
+                            <dd class="mt-1 text-[15px] font-medium">{{ $value }}</dd>
+                        </div>
+                    @endforeach
+                </dl>
+
+                @if ($intern->hasCertificate())
+                    <a href="{{ route('interns.certificate.download', $intern) }}" class="mt-8 flex w-full items-center justify-center gap-2 rounded-lg bg-brand px-5 py-3 font-bold text-white transition hover:bg-[#096b96]">
+                        <svg class="size-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m-5-5 5 5 5-5M5 20h14"/></svg>
+                        Download Sertifikat
+                    </a>
+                @endif
+            @else
+                <div class="text-center">
+                    <span class="inline-flex items-center gap-1.5 rounded-full border border-[#f6cfca] bg-[#fef3f2] px-3.5 py-1 text-[12px] font-semibold text-[#b42318]">
+                        <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9.5 9.5 5 5m0-5-5 5"/></svg>
+                        Tidak terverifikasi
+                    </span>
+                    <h1 class="mt-4 text-[24px] leading-tight font-bold tracking-[-0.5px]">Sertifikat tidak ditemukan</h1>
+                    <p class="mt-2 text-muted">Kode QR ini tidak terdaftar di Devgenfour. Pastikan Anda memindai sertifikat asli.</p>
+                </div>
+            @endif
+
+            <div class="mt-8 border-t border-line pt-6 text-center text-[12px] leading-relaxed text-[#8193a3]">
+                <p>Keaslian dokumen ini dapat diverifikasi setiap saat melalui sistem verifikasi elektronik Devgenfour.</p>
+                <p>Untuk informasi lebih lanjut, silakan <a href="{{ route('home') }}#contact" class="font-semibold text-brand hover:underline">hubungi Devgenfour</a>.</p>
+            </div>
+        </section>
     </main>
 </body>
 </html>

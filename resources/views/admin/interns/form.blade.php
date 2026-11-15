@@ -4,6 +4,7 @@
     $labelClass = 'block text-[13px] font-semibold';
     $hintClass = 'mt-1.5 text-[12px] text-muted';
     $errorClass = 'mt-1.5 text-[12px] font-semibold text-[#b42318]';
+    $fileClass = 'mt-2 block w-full text-[13px] text-muted file:mr-3 file:cursor-pointer file:rounded-md file:border-0 file:bg-[#eaf6fc] file:px-3.5 file:py-2 file:text-[13px] file:font-semibold file:text-brand hover:file:bg-[#d8eef9]';
 @endphp
 
 <form method="POST" action="{{ $action }}" enctype="multipart/form-data" class="space-y-5">
@@ -39,15 +40,35 @@
     </section>
 
     <section class="{{ $cardClass }}">
-        <h2 class="text-[15px] font-bold">Foto profil</h2>
+        <h2 class="text-[15px] font-bold">Foto Profile</h2>
         <div class="mt-4">
-            <label for="photo" class="{{ $labelClass }}">Foto</label>
+            <label for="photo" class="{{ $labelClass }}">Foto Profile</label>
             @if ($intern->exists)
-                <img class="mt-2 size-24 rounded-full border border-line object-cover" src="{{ $intern->photoUrl() }}" alt="Foto saat ini">
+                <img class="mt-2 h-32 w-24 rounded-lg border border-line object-cover" src="{{ $intern->photoUrl() }}" alt="Foto saat ini">
             @endif
-            <input id="photo" type="file" name="photo" accept="image/jpeg,image/png,image/webp" @required(! $intern->exists) class="mt-2 block w-full text-[13px] text-muted file:mr-3 file:cursor-pointer file:rounded-md file:border-0 file:bg-[#eaf6fc] file:px-3.5 file:py-2 file:text-[13px] file:font-semibold file:text-brand hover:file:bg-[#d8eef9]">
-            <p class="{{ $hintClass }}">JPG, PNG, atau WebP, maksimal 2 MB. Foto persegi (misalnya 600 × 600 px) tampil paling pas di halaman verifikasi.@if ($intern->exists) Kosongkan jika tidak ingin mengganti foto.@endif</p>
+            <input id="photo" type="file" name="photo" accept="image/jpeg,image/png,image/webp" @required(! $intern->exists) class="{{ $fileClass }}">
+            <p class="{{ $hintClass }}">JPG, PNG, atau WebP, maksimal 2 MB. Foto tegak seperti pas foto (rasio 3:4, misalnya 600 × 800 px) tampil paling pas.@if ($intern->exists) Kosongkan jika tidak ingin mengganti foto.@endif</p>
             @error('photo')<p class="{{ $errorClass }}">{{ $message }}</p>@enderror
+        </div>
+    </section>
+
+    <section class="{{ $cardClass }}">
+        <h2 class="text-[15px] font-bold">Sertifikat</h2>
+        <p class="{{ $hintClass }}">
+            @if ($intern->exists)
+                <a href="{{ route('admin.interns.qr-code', $intern) }}" class="font-semibold text-brand hover:underline">Unduh QR code</a> lalu tempel di desain sertifikat, kemudian unggah sertifikatnya di sini.
+            @else
+                Boleh dikosongkan dulu. Setelah peserta disimpan, unduh QR code-nya dari daftar magang, tempel di desain sertifikat, lalu unggah sertifikatnya lewat tombol Ubah.
+            @endif
+        </p>
+        <div class="mt-4">
+            <label for="certificate" class="{{ $labelClass }}">File sertifikat</label>
+            @if ($intern->hasCertificate())
+                <p class="mt-2 text-[13px]">Sertifikat saat ini: <a href="{{ route('interns.certificate.download', $intern) }}" class="font-semibold text-brand hover:underline">{{ $intern->certificateDownloadName() }}</a></p>
+            @endif
+            <input id="certificate" type="file" name="certificate" accept="application/pdf,image/jpeg,image/png" class="{{ $fileClass }}">
+            <p class="{{ $hintClass }}">PDF, JPG, atau PNG, maksimal 5 MB.@if ($intern->hasCertificate()) Kosongkan jika tidak ingin mengganti sertifikat.@endif</p>
+            @error('certificate')<p class="{{ $errorClass }}">{{ $message }}</p>@enderror
         </div>
     </section>
 

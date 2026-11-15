@@ -1,12 +1,13 @@
 <?php
 
 use App\Enums\UserRole;
-use App\Http\Controllers\Admin\InternCertificateController;
 use App\Http\Controllers\Admin\InternController;
+use App\Http\Controllers\Admin\InternQrCodeController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\ProjectIconPreviewController;
 use App\Http\Controllers\Admin\SessionController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\InternCertificateDownloadController;
 use App\Http\Controllers\InternVerificationController;
 use App\Models\Project;
 use App\Support\ContactDetails;
@@ -45,7 +46,7 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
             ->middleware('throttle:60,1')
             ->name('project-icon-preview.show');
         Route::resource('interns', InternController::class)->except('show');
-        Route::get('interns/{intern}/certificate', InternCertificateController::class)->name('interns.certificate');
+        Route::get('interns/{intern}/qr-code', InternQrCodeController::class)->name('interns.qr-code');
         Route::get('settings', [SettingController::class, 'edit'])->name('settings.edit');
         Route::put('settings', [SettingController::class, 'update'])->name('settings.update');
     });
@@ -56,3 +57,4 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
 Route::get('verify/{intern}', InternVerificationController::class)
     ->missing(fn (): Response => response()->view('interns.verify', ['intern' => null], 404))
     ->name('interns.verify');
+Route::get('verify/{intern}/certificate', InternCertificateDownloadController::class)->name('interns.certificate.download');

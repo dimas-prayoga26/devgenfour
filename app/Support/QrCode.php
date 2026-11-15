@@ -8,23 +8,22 @@ use BaconQrCode\Renderer\Image\SvgImageBackEnd;
 use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Writer;
-use Illuminate\Support\HtmlString;
 
 /**
- * Draws QR codes as inline SVG, which stays sharp when a certificate is printed.
+ * Draws QR codes as SVG files, which stay sharp at any size on a printed certificate.
  */
 final class QrCode
 {
     /**
-     * Render the content as an SVG QR code of the given size in pixels, without the XML declaration so it can be inlined.
+     * Render the content as an SVG document of the given size in pixels.
      *
-     * Error correction level M keeps a printed code readable when it is slightly smudged or creased.
+     * The four-module white margin is the quiet zone scanners need, and error correction level M keeps
+     * a printed code readable when it is slightly smudged or creased.
      */
-    public static function svg(string $content, int $size = 160): HtmlString
+    public static function svg(string $content, int $size = 600): string
     {
-        $writer = new Writer(new ImageRenderer(new RendererStyle($size, 0), new SvgImageBackEnd));
-        $svg = $writer->writeString($content, Encoder::DEFAULT_BYTE_MODE_ENCODING, ErrorCorrectionLevel::M());
+        $writer = new Writer(new ImageRenderer(new RendererStyle($size, 4), new SvgImageBackEnd));
 
-        return new HtmlString(trim(substr($svg, strpos($svg, '<svg'))));
+        return $writer->writeString($content, Encoder::DEFAULT_BYTE_MODE_ENCODING, ErrorCorrectionLevel::M());
     }
 }

@@ -27,6 +27,17 @@ class InternFactory extends Factory
             'photo_path' => 'interns/'.fake()->uuid().'.jpg',
             'start_date' => $startDate,
             'end_date' => $startDate->copy()->addMonths(3),
+            'certificate_path' => null,
         ];
+    }
+
+    /**
+     * Indicate that the admin has uploaded the intern's certificate.
+     */
+    public function withCertificate(string $path = 'interns/sertifikat.pdf'): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'certificate_path' => $path,
+        ]);
     }
 }
