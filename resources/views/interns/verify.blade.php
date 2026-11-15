@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#102f4c">
-    <title>{{ $intern ? "Verifikasi Sertifikat {$intern->number}" : 'Sertifikat tidak ditemukan' }} · Devgenfour</title>
+    <title>{{ $intern ? "Sertifikat Magang {$intern->number}" : 'Sertifikat tidak ditemukan' }} · Devgenfour</title>
     <link rel="icon" type="image/png" href="{{ asset('Logo/logo_icon.png') }}">
     @vite('resources/css/app.css')
 </head>
@@ -15,8 +15,7 @@
         <div class="absolute -top-24 -left-20 size-72 rounded-full bg-white/5" aria-hidden="true"></div>
         <div class="absolute -right-16 -bottom-36 size-80 rounded-full bg-brand/30" aria-hidden="true"></div>
         <a href="{{ route('home') }}" class="relative inline-flex rounded-xl bg-white px-4 py-2 shadow-[0_8px_24px_#0000002e]"><img class="w-[118px]" src="{{ asset('Logo/devgen.png') }}" width="500" height="240" alt="Devgenfour"></a>
-        <p class="relative mt-6 text-[11px] font-bold tracking-[3px] text-[#8fd3f2] uppercase">Sistem Verifikasi Devgenfour</p>
-        <h1 class="relative mt-1.5 text-[24px] leading-tight font-bold tracking-[-0.5px] md:text-[28px]">Verifikasi Sertifikat Magang</h1>
+        <h1 class="relative mt-6 text-[24px] leading-tight font-bold tracking-[-0.5px] md:text-[28px]">Sertifikat Magang</h1>
     </header>
 
     <main class="relative mx-auto -mt-20 max-w-xl px-4 pb-12">
